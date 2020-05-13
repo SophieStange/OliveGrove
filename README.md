@@ -1,2 +1,0 @@
-# OliveGrove
-Netlogo Project 
