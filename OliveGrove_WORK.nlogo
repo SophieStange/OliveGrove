@@ -100,12 +100,10 @@ end
 to setup-calender
   set month 1
   set day 1
-
   set doy 1
-
   set days-in-months (list 31 28 31 30 31 30 31 31 30 31 30 31)
-
   reset-ticks
+
 end
 
 
@@ -122,6 +120,9 @@ to setup-trees
   span-by-density
 
 end
+
+
+; create tree grid
 
 to span-by-density
   let varianz ( 100 - tree-density ) / 5
@@ -172,7 +173,6 @@ end
 to create-fem-flies
 
   create-flies 200 [
-
   set shape "bug"
   set color black
   set energy 50
@@ -185,7 +185,6 @@ end
 to create-mal-flies
 
   create-flies 200 [
-
   set shape "bug"
   set color blue
   set energy 50
@@ -203,6 +202,7 @@ end
 
 to setup-patches
   ask patches [set pcolor 28 ]
+
 end
 
 
@@ -262,6 +262,7 @@ to setup-traps
   set shape "box"
   set color 8
   ]
+
 end
 
 ;;-------------------------------------------------------------------------------
@@ -296,6 +297,16 @@ end
 ;;-------------------------------------------------------------------------------
 
 
+to go
+  go-time
+  go-flies
+  tick
+  if doy = 365 [
+  stop
+  ]
+
+end
+
 ;;-------------------------------------------------------------------------------
 ;    6.1) GO Calender
 ;;-------------------------------------------------------------------------------
@@ -303,7 +314,6 @@ end
 to go-time
   update-temperature
   advance-calender
-  tick
 
 end
 
@@ -313,13 +323,15 @@ end
 
 to update-temperature
 
-  let daily-temperature-sigma 4.0
-  let seasonal-temperature-range 40.0
+
+
+  let daily-temperature-sigma 3.0
+  let seasonal-temperature-range 18.0
 
   ;; define a base temperature seasonal signal with 120 day shift
   ;; (i.e. maximum  on 1 August, minimum 1 Feb)
 
-  let base-temperature 15 + sin ( ( doy - 129 + random 19 )
+  let base-temperature 19 + sin ( ( doy - 120 + random 19 )
     * 360.0 / (365 ) ) * seasonal-temperature-range / 2.0
 
   set temperature random-normal base-temperature daily-temperature-sigma
@@ -354,7 +366,6 @@ to advance-calender
     set day 1
   ]
 
-
 end
 
 
@@ -363,12 +374,11 @@ end
 ;;-------------------------------------------------------------------------------
 
 
-  to go                                                                           ; 1) Random movement
-  go-time                                                                         ; 2) Fertile period: Searching males (blue)/ females (pink) to match up
-  ask turtles [ move-flies ]                                                      ; 3) Pregnant females searching trees, leaving eggs -> reducing trees' value
-  tick                                                                            ; 4) When trees' value = 0, no more space for eggs
-                                                                                  ; 5) After leaving eggs, female flies continue random movement, not fertile anymore??? (black again)
-end
+  to go-flies                                                                     ; 1) Random movement
+  [move-flies]                                                                    ; 2) Fertile period: Searching males (blue)/ females (pink) to match up;
+                                                                                  ; 3) Pregnant females searching trees, leaving eggs -> reducing trees' value
+                                                                                  ; 4) When trees' value = 0, no more space for eggs
+end                                                                               ; 5) After leaving eggs, female flies continue random movement, not fertile anymore??? (black again)
 
 ; random movement from january to may????
 
@@ -382,6 +392,7 @@ to move-flies
     ]
     ]
   ]
+
 end
 
 
@@ -575,7 +586,7 @@ MONITOR
 1173
 63
 N° Flys
-Fly population
+Count flies
 17
 1
 11
@@ -602,12 +613,12 @@ Temperature / Humidity
 0.0
 365.0
 0.0
-10.0
+40.0
 true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot count turtles"
+"default" 1.0 0 -16777216 true "" "plot temperature"
 
 MONITOR
 1121
@@ -662,12 +673,12 @@ Individuals
 0.0
 365.0
 0.0
-1000000.0
+1000.0
 true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot count turtles"
+"default" 1.0 0 -16777216 true "" "plot count flies"
 
 MONITOR
 1116
@@ -724,6 +735,17 @@ NIL
 NIL
 NIL
 1
+
+MONITOR
+299
+19
+356
+64
+doy
+doy
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
