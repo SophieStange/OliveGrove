@@ -375,7 +375,7 @@ end
 
 
   to go-flies                                                                     ; 1) Random movement
-  [move-flies]                                                                    ; 2) Fertile period: Searching males (blue)/ females (pink) to match up;
+  move-flies                                                                      ; 2) Fertile period: Searching males (blue)/ females (pink) to match up;
                                                                                   ; 3) Pregnant females searching trees, leaving eggs -> reducing trees' value
                                                                                   ; 4) When trees' value = 0, no more space for eggs
 end                                                                               ; 5) After leaving eggs, female flies continue random movement, not fertile anymore??? (black again)
@@ -511,7 +511,7 @@ Cover-sprays
 Cover-sprays
 0
 100
-55.0
+30.0
 1
 1
 NIL
@@ -526,7 +526,7 @@ Predator-method
 Predator-method
 0
 100
-29.0
+30.0
 1
 1
 NIL
@@ -541,7 +541,7 @@ SIT
 SIT
 0
 100
-31.0
+30.0
 1
 1
 NIL
@@ -563,7 +563,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot count turtles"
+"default" 1.0 0 -16777216 true "" "plot sum [energy] of trees"
 
 SLIDER
 15
@@ -574,7 +574,7 @@ Tree-density
 Tree-density
 0
 100
-50.0
+66.0
 1
 1
 NIL
@@ -597,7 +597,7 @@ MONITOR
 1237
 257
 Healthy olives in kg
-Healthy Olives
+sum [energy] of trees
 17
 1
 11
@@ -615,10 +615,11 @@ Temperature / Humidity
 0.0
 40.0
 true
-false
+true
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot temperature"
+"Temperature" 1.0 0 -2139308 true "" "plot temperature"
+"Air humidity" 1.0 0 -14070903 true "" "plot air-humidity"
 
 MONITOR
 1121
@@ -653,9 +654,9 @@ Olive-variety
 0
 
 CHOOSER
-168
+162
 70
-306
+300
 115
 Harvest-time
 Harvest-time
@@ -737,10 +738,10 @@ NIL
 1
 
 MONITOR
-299
-19
-356
-64
+304
+11
+361
+56
 doy
 doy
 17
