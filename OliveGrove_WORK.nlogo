@@ -147,12 +147,16 @@ to span-by-density
 
   foreach possible-coords [                                                     ; foreach runs commands for each element (= couple of coordinates) of list possible-coords
     coords ->                                                                   ; element = couple of coords = mini-list of two elements = variable "coords"
+    let pos-x item 0 coords
+    let pos-y item 1 coords
+    if pos-x > 99 [set pos-x 99]
+    if pos-y > 99 [set pos-y 99]
     create-trees 1 [                                                            ; creates described tree for element coords
       set shape "circle"
       set color green
       set energy 100
       set size 10
-      setxy ( item 0 coords ) ( item 1 coords )                                 ; sets x = first item of mini-list "coords" = 0
+      setxy pos-x pos-y                                                         ; sets x = first item of mini-list "coords" = 0
     ]                                                                           ; and  y = second item of mini-list "coords" = 1
   ]                                                                             ; bc. foreach this repeats for each couple of possible coordinates
 
@@ -412,18 +416,15 @@ end
 
 
 
-
-
-
 @#$#@#$#@
 GRAPHICS-WINDOW
-438
-10
-859
-432
+366
+196
+779
+610
 -1
 -1
-4.13
+4.05
 1
 5
 1
@@ -444,10 +445,10 @@ ticks
 30.0
 
 BUTTON
-17
-12
-83
-45
+22
+562
+92
+595
 NIL
 Setup\n
 NIL
@@ -461,10 +462,10 @@ NIL
 1
 
 BUTTON
-105
-13
-168
-46
+112
+563
+181
+596
 NIL
 Go
 T
@@ -478,20 +479,20 @@ NIL
 1
 
 CHOOSER
-16
-158
-279
-203
+19
+167
+236
+212
 Cultivation-method
 Cultivation-method
 "Traditional-extensive-production" "Organic-production" "Traditional-intensified-production" "Industrial-production"
-1
+2
 
 SLIDER
-213
-218
-385
-251
+16
+332
+188
+365
 Number-of-traps
 Number-of-traps
 0
@@ -503,10 +504,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-213
-259
-385
-292
+16
+373
+188
+406
 Cover-sprays
 Cover-sprays
 0
@@ -518,10 +519,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-215
-303
-387
-336
+18
+417
+190
+450
 Predator-method
 Predator-method
 0
@@ -533,10 +534,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-215
-346
-387
-379
+18
+460
+190
+493
 SIT
 SIT
 0
@@ -548,10 +549,10 @@ NIL
 HORIZONTAL
 
 PLOT
-879
-209
-1108
-391
+796
+426
+1092
+608
 Healthy olives
 Time
 Healty olives in kg
@@ -566,25 +567,25 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot sum [energy] of trees"
 
 SLIDER
-15
-216
-187
-249
+17
+263
+189
+296
 Tree-density
 Tree-density
 0
 100
-66.0
+17.0
 1
 1
 NIL
 HORIZONTAL
 
 MONITOR
-1116
-18
-1173
-63
+1098
+235
+1155
+280
 N° Flys
 Count flies
 17
@@ -592,10 +593,10 @@ Count flies
 11
 
 MONITOR
-1122
-212
-1237
-257
+1104
+429
+1219
+474
 Healthy olives in kg
 sum [energy] of trees
 17
@@ -603,10 +604,10 @@ sum [energy] of trees
 11
 
 PLOT
-18
-425
-279
-600
+439
+10
+1191
+188
 Climate
 Time
 Temperature / Humidity
@@ -622,10 +623,10 @@ PENS
 "Air humidity" 1.0 0 -14070903 true "" "plot air-humidity"
 
 MONITOR
-1121
-268
-1227
-313
+1103
+485
+1209
+530
 NIL
 Monetary value
 17
@@ -633,10 +634,10 @@ Monetary value
 11
 
 MONITOR
-366
-11
-423
-56
+367
+141
+424
+186
 Day
 Day
 17
@@ -644,30 +645,30 @@ Day
 11
 
 CHOOSER
-15
-70
-153
-115
+25
+53
+165
+98
 Olive-variety
 Olive-variety
 "a" "b" "c"
 0
 
 CHOOSER
-162
-70
-300
-115
+196
+54
+334
+99
 Harvest-time
 Harvest-time
 "September" "October" "November"
 0
 
 PLOT
-878
-17
-1100
-190
+797
+234
+1090
+407
 Fly population
 time
 Individuals
@@ -682,10 +683,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot count flies"
 
 MONITOR
-1116
-68
-1222
-113
+1098
+285
+1204
+330
 NIL
 N° Generations
 17
@@ -693,10 +694,10 @@ N° Generations
 11
 
 BUTTON
-187
-15
-273
-48
+199
+563
+277
+596
 Go-once
 Go
 NIL
@@ -710,10 +711,10 @@ NIL
 1
 
 MONITOR
-366
-65
-423
-110
+367
+74
+424
+119
 Month
 Month
 17
@@ -721,10 +722,10 @@ Month
 11
 
 BUTTON
-283
-159
-427
-192
+19
+217
+138
+250
 NIL
 Confirm-selection
 NIL
@@ -738,15 +739,75 @@ NIL
 1
 
 MONITOR
-304
-11
-361
-56
+366
+10
+423
+55
 doy
 doy
 17
 1
 11
+
+TEXTBOX
+25
+24
+315
+65
+1) Select olive variety and time of harvest.
+13
+0.0
+1
+
+TEXTBOX
+23
+125
+320
+181
+2) Select cultivation-method and confirm selection with button.
+13
+0.0
+1
+
+TEXTBOX
+201
+263
+341
+504
+3) Vary the standard settings of tree-density or pestcontrol methods as you wish to see certain effects of singular changes.
+13
+0.0
+1
+
+TEXTBOX
+18
+311
+168
+329
+Pest control methods:
+13
+82.0
+1
+
+TEXTBOX
+19
+519
+318
+565
+4) Click Setup to prepare for a new simulation and Go / Go-once to start it.
+13
+0.0
+1
+
+TEXTBOX
+795
+206
+1190
+240
+Visualisation of development of fly and olive population:
+14
+34.0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
