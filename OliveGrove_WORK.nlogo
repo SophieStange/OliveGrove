@@ -167,6 +167,9 @@ end
 ;         3.3.2) Setup Flies
 ;;-------------------------------------------------------------------------------
 
+
+;at setup must appear only male and female pupals in soil
+
 to setup-flies
 
 create-fem-flies                                                              ; create a group of female and anoter of male flies.
@@ -376,6 +379,12 @@ end
 ;;-------------------------------------------------------------------------------
 ;    6.2) GO Flies
 ;;-------------------------------------------------------------------------------
+
+
+; Pupals in soil, end of winter turning into flies, sexual maturing of f. flies during 7 days after appearance. But: no ovarian development under 12°C.
+; Mature females mating with males. But: about 17°C required. And: if no access to fruits: "sexual diapause" until optimal fruit size, THEN mating and oviposition (1 egg per fruit)
+; Oviposition in olive fruits. But: about 17°C required.
+;If temp. higher 29°C -> sexual diapause
 
 
   to go-flies                                                                     ; 1) Random movement
