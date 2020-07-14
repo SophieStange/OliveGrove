@@ -15,10 +15,11 @@
 ; 3) SETUP
 ;    3.1) General Setup
 ;    3.2) Setup Calender
-;    3.3) Setup Turtles
+;    3.3) Setup General Variables
+;    3.4) Setup Turtles
 ;         3.3.1) Setup Trees
 ;         3.3.2) Setup Flies
-;    3.4) Setup Patches
+;    3.5) Setup Patches
 
 ; 4) Standard Settings CULTIVATION METHODS
 
@@ -33,6 +34,9 @@
 ;         6.1.1) Weather Generation Function
 ;         6.1.2) Calender Advance
 ;    6.2) GO Flies
+;    6.3) GO Olives
+
+
 
 ; 7) Olive Variety
 
@@ -55,6 +59,9 @@ globals [
     doy
     days-in-months
     temperature
+  ;others
+    season
+    temp
 
 ]
 
@@ -69,7 +76,7 @@ breed [ predators predator ]
 breed [ traps trap ]
 breed [ sterile-flies steril-fly ]
 
-turtles-own [energy] ; all turtles having enrgy level
+turtles-own [energy stage gender] ; all turtles having enrgy level
 
 ;;-------------------------------------------------------------------------------
 ; 3) SETUP
@@ -89,6 +96,7 @@ to setup
   setup-calender
   ;setup-cultivation-method
   reset-ticks
+  setup-stage
 
 end
 
@@ -106,14 +114,24 @@ to setup-calender
 
 end
 
+;;--------------------------------------------------------------------------------
+;    3.3) Setup General Variables
+;;--------------------------------------------------------------------------------
+
+
+to setup-stage
+  set season 1
+  set temp 0
+
+end
 
 ;;-------------------------------------------------------------------------------
-;    3.3) Setup Turtles
+;    3.4) Setup Turtles
 ;;-------------------------------------------------------------------------------
 
 
 ;;-------------------------------------------------------------------------------
-;         3.3.1) Setup Trees
+;         3.4.1) Setup Trees
 ;;-------------------------------------------------------------------------------
 
 to setup-trees
@@ -164,7 +182,7 @@ end
 
 
 ;;-------------------------------------------------------------------------------
-;         3.3.2) Setup Flies
+;         3.4.2) Setup Flies
 ;;-------------------------------------------------------------------------------
 
 
@@ -172,7 +190,7 @@ end
 
 to setup-flies
 
-create-fem-flies                                                              ; create a group of female and anoter of male flies.
+create-fem-flies                                                           ; create a group of female and anoter of male flies.
 create-mal-flies
 
 end
@@ -183,7 +201,9 @@ to create-fem-flies
   set shape "bug"
   set color black
   set energy 50
-  set size 0.5
+  set size 0
+  set stage 3
+  set gender "female"
   setxy random-xcor random-ycor
 ]
 
@@ -195,7 +215,9 @@ to create-mal-flies
   set shape "bug"
   set color blue
   set energy 50
-  set size 0.5
+  set size 0
+  set stage 3
+  set gender "male"
   setxy random-xcor random-ycor
 ]
 
@@ -204,7 +226,7 @@ end
 
 
 ;;-------------------------------------------------------------------------------
-;    3.4) Setup Patches
+;    3.5) Setup Patches
 ;;-------------------------------------------------------------------------------
 
 to setup-patches
@@ -381,34 +403,86 @@ end
 ;;-------------------------------------------------------------------------------
 
 
-; Pupals in soil, end of winter turning into flies, sexual maturing of f. flies during 7 days after appearance. But: no ovarian development under 12°C.
+; Pupals in soil, end of winter turning into flies, sexual maturing of f. flies during 7 days after appearance. But: no ovarian development under?? 12°C.
 ; Mature females mating with males. But: about 17°C required. And: if no access to fruits: "sexual diapause" until optimal fruit size, THEN mating and oviposition (1 egg per fruit)
 ; Oviposition in olive fruits. But: about 17°C required.
-;If temp. higher 29°C -> sexual diapause
+; If temp. higher 29°C -> sexual diapause until cooler temp.
+; egg 3 days
+; larvae 20 days
+; pupal dev. depending on climate
+; egg and larvae mortality dep. on climate (hot a. dry)
 
+to go-flies                                                                       ; 1) Random movement
+  check-stage
 
-  to go-flies                                                                     ; 1) Random movement
   move-flies                                                                      ; 2) Fertile period: Searching males (blue)/ females (pink) to match up;
                                                                                   ; 3) Pregnant females searching trees, leaving eggs -> reducing trees' value
                                                                                   ; 4) When trees' value = 0, no more space for eggs
 end                                                                               ; 5) After leaving eggs, female flies continue random movement, not fertile anymore??? (black again)
 
-; random movement from january to may????
+                                                                                  ; random movement from january to may????
+
+
+to check-stage
+ if temperature > 11 and season = 1 [
+    set temp (temp + 1)
+    if temp > 7 [
+      set season 2
+    ]
+  ]
+
+  if temperature > 17 and temperature < 29 and season = 2 [
+      set season 3
+  ]
+
+    (ifelse
+     season = 2 [
+       ask flies [
+      set size 0.5
+      set stage 4
+      ]
+    ]
+     season = 1 [
+       ask flies [
+      set size 0
+      set stage 3
+      ]
+    ]
+    season = 3 [
+       ask flies [
+        if gender = "female"[
+       ; mate flies
+        set stage 5
+        set color red
+       ]
+      ]
+    ])
+end
+
+;to mating
+
+ ; ask female-flies [
+  ;  buscar male flies
+   ; set stage 5
+  ;]
+
+;end
+
 
 to move-flies
-                                                                                  ; 1) Until may moving between 0 and 3 steps, by poss. of 50 %,
+                                                                                  ; 1) Moving between 0 and 3 steps, by poss. of 50 %,
   ask flies[                                                                      ;    turning right in angle between 0 and 45°, by poss. of 50 %
-  if month < 5 [
   if random 100 < 50 [
     forward random 3
     right random 45
-    ]
     ]
   ]
 
 end
 
-
+;;-------------------------------------------------------------------------------
+;    6.3) GO Olives
+;;-------------------------------------------------------------------------------
 
 ;;-------------------------------------------------------------------------------
  ; Olive-vairety
@@ -495,7 +569,7 @@ CHOOSER
 Cultivation-method
 Cultivation-method
 "Traditional-extensive-production" "Organic-production" "Traditional-intensified-production" "Industrial-production"
-2
+3
 
 SLIDER
 16
@@ -536,7 +610,7 @@ Predator-method
 Predator-method
 0
 100
-30.0
+40.0
 1
 1
 NIL
@@ -584,7 +658,7 @@ Tree-density
 Tree-density
 0
 100
-17.0
+50.0
 1
 1
 NIL
